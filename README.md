@@ -1,6 +1,6 @@
 Datasets-
-CovidDeaths: Daily COVID-19 cases, deaths, and population by country.
-CovidVacc: Daily vaccination counts and country-level socioeconomic data including GDP and life expectancy.
+>CovidDeaths Daily COVID-19 cases, deaths, and population by country.
+>CovidVacc: Daily vaccination counts and country-level socioeconomic data including GDP and life expectancy.
 
 Objectives-
 >Examine how COVID-19 cases and deaths vary across countries and continents.
