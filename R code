@@ -1,0 +1,63 @@
+```{r cars}
+setwd("C:/Users/sampa/OneDrive/Desktop/Sampan/Masters/RR")
+
+df_data <- read.csv(file = "CovidProj.csv", header = TRUE, na.strings = ".")
+
+ # Convert to numeric BEFORE dropping NAs
+df_data$TotalDeathCount <- as.numeric(df_data$TotalDeathCount)
+df_data$population <- as.numeric(df_data$population)
+df_data$life_expectancy <- as.numeric(df_data$life_expectancy)
+df_data$deaths_per_million <- as.numeric(df_data$deaths_per_million)
+df_data$gdp_per_capita <- as.numeric(df_data$gdp_per_capita)
+
+# Now drop rows with NA *after* conversion
+df_data_clean <- na.omit(df_data)
+
+library(ggplot2)
+
+# Plotting gdp against COVID 19- deaths per million
+
+plot_gdp<- ggplot(df_data_clean, aes(x = gdp_per_capita, y = deaths_per_million)) +
+  geom_point(color = "blue", alpha = 0.6, size = 3) +
+  geom_smooth(method = "lm", se = TRUE, color = "red") +
+  labs(
+    title = "COVID-19 Deaths per Million vs GDP per Capita",
+    x = "GDP per Capita (USD)",
+    y = "Deaths per Million"
+  ) +
+  theme_minimal()
+
+# Plotting Life expectancy against COVID-19 deaths per million
+
+plot_life<- ggplot(df_data_clean, aes(x = life_expectancy, y = deaths_per_million)) +
+  geom_point(color = "darkgreen", alpha = 0.6, size = 3) +
+  geom_smooth(method = "lm", se = TRUE, color = "orange") +
+  labs(
+    title = "COVID-19 Deaths per Million vs Life Expectancy",
+    x = "Life Expectancy (Years)",
+    y = "Deaths per Million"
+  ) +
+  theme_minimal()
+
+ggsave("gdp_vs_deaths.png", plot = plot_gdp, width = 8, height = 6, dpi = 300)
+ggsave("life_expectancy_vs_deaths.png", plot = plot_life, width = 8, height = 6, dpi = 300)
+
+# Conducting Regression analysis
+
+model <- lm(deaths_per_million ~ gdp_per_capita + life_expectancy, data = df_data_clean)
+summary(model)
+
+# Plotting COVID-19 deaths against GDP and life expectancy
+
+plot_deathlife <- ggplot(df_data_clean, aes(x = gdp_per_capita, y = life_expectancy, size = deaths_per_million)) +
+  geom_point(alpha = 0.7) +
+  scale_size(range = c(2, 12)) +
+  labs(
+    title = "COVID-19 Deaths per Million by GDP and Life Expectancy",
+    x = "GDP per Capita",
+    y = "Life Expectancy",
+    size = "Deaths per Million",
+  ) +
+  theme_minimal()
+
+ggsave("gdp_life_expectancy_vs_deaths.png", plot = plot_deathlife, width = 8, height = 6, dpi = 300)
